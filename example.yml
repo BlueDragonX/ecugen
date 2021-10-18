@@ -1,0 +1,57 @@
+# Define integrations.
+
+integration arduino:
+  type: board
+
+integration can:
+  type: can
+
+integration info:
+  type: realdash
+
+# inputs track state 
+# input state is typically changed by receiving some external signal
+# each state of an input has one or more assigned values
+# inputs trigger their attached connectors when state changes
+# some inputs may also repeatedly trigger on a delay
+
+input climate_airflow:
+  type: can
+  match:
+    id: 123
+    byte:
+      value: 123
+      offset: 2
+      length: 1
+  values:
+  - status:
+      offset: 2
+      length: 1
+      mask: 0x01
+      endianess: little
+      #endianess: big
+
+input button:
+  type: digital
+  pin: 1
+  mode: set
+  #mode: toggle_on_high
+  #mode: toggle_on_low
+  values:
+  - 0x00
+  - 0x01
+  repeat: 500
+
+output climate_airflow:
+  type: can
+  id: 123
+  payload:
+
+output light:
+  type: digital
+  pin: 2
+  high: 0x01
+  low: 0x00
+
+connector ac:
+  output: can
